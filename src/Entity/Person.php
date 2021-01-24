@@ -2,11 +2,23 @@
 
 namespace App\Entity;
 
-use App\Repository\PersonRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PersonRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
+ * @ApiResource(
+ *  attributes={
+ *      "order": {"FamilyNumber" : "asc"}
+ *  }
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"FamilyNumber": "start", "generation" : "exact"})
+ * @ApiFilter(RangeFilter::class, properties={"FamilyNumber"})
  */
 class Person
 {
@@ -19,21 +31,28 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ce champ ne peut pas être vide")
+     * @Assert\Length(min=3, minMessage="Le nom doit faire au moins 3 caractères", max=25,  maxMessage="Le nom doit faire au plus 25 caractères")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ce champ ne peut pas être vide")
+     * @Assert\Length(min=3, minMessage="Le nom doit faire au moins 3 caractères", max=25,  maxMessage="Le nom doit faire au plus 25 caractères")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ce champ ne peut pas être vide")
+     * @Assert\Length(min=3, minMessage="Le nom doit faire au moins 3 caractères", max=25,  maxMessage="Le nom doit faire au plus 25 caractères")
      */
     private $familyName;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="Ce champ ne peut pas être vide")
      */
     private $birthday;
 
@@ -44,6 +63,7 @@ class Person
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Ce champ ne peut pas être vide")
      */
     private $generation;
 
